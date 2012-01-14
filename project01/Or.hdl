@@ -1,16 +1,24 @@
-// This file is part of the materials accompanying the book 
-// "The Elements of Computing Systems" by Nisan and Schocken, 
+// This file is part of the materials accompanying the book
+// "The Elements of Computing Systems" by Nisan and Schocken,
 // MIT Press. Book site: www.idc.ac.il/tecs
 // File name: projects/01/Or.hdl
-
+
 /**
- * Or gate: out = 1 if {a==1 or b==1}, 0 otherwise  
+ * Or gate: out = 1 if {a==1 or b==1}, 0 otherwise
  */
 
 CHIP Or {
+
     IN a, b;
     OUT out;
 
     PARTS:
     // Put your code here.
+    // Or = Nand(Not(a), Not(b))
+
+    Not(in=a, out=notA);
+    Not(in=b, out=notB);
+
+    Nand(a=notA, b=notB, out=out);
+
 }

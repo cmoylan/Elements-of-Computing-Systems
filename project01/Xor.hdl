@@ -1,5 +1,5 @@
-// This file is part of the materials accompanying the book 
-// "The Elements of Computing Systems" by Nisan and Schocken, 
+// This file is part of the materials accompanying the book
+// "The Elements of Computing Systems" by Nisan and Schocken,
 // MIT Press. Book site: www.idc.ac.il/tecs
 // File name: projects/01/Xor.hdl
 
@@ -14,4 +14,15 @@ CHIP Xor {
 
     PARTS:
     // Put your code here.
+    // Or = Nand(Not(a), Not(b))
+    // Xor = Or(And(Not(a), b), And(a, Not(b)))
+
+    Not(in=a, out=notA);
+    And(a=notA, b=b, out=and1);
+
+    Not(in=b, out=notB);
+    And(a=a, b=notB, out=and2);
+
+    Or(a=and1, b=and2, out=out);
+
 }
