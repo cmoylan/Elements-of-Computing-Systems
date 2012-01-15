@@ -1,10 +1,10 @@
-// This file is part of the materials accompanying the book 
-// "The Elements of Computing Systems" by Nisan and Schocken, 
+// This file is part of the materials accompanying the book
+// "The Elements of Computing Systems" by Nisan and Schocken,
 // MIT Press. Book site: www.idc.ac.il/tecs
 // File name: projects/01/DMux4Way.hdl
 
 /**
- * 4-way demultiplexor.  
+ * 4-way demultiplexor.
  * {a,b,c,d} = {in,0,0,0} if sel==00
  *             {0,in,0,0} if sel==01
  *             {0,0,in,0} if sel==10
@@ -13,12 +13,13 @@
 
 
 CHIP DMux4Way {
-
-
     IN in, sel[2];
-
     OUT a, b, c, d;
 
     PARTS:
     // Put your code here.
+    DMux(in=in, sel=sel[1], a=dmux0, b=dmux1);
+
+    DMux(in=dmux0, sel=sel[0], a=a, b=b);
+    DMux(in=dmux1, sel=sel[0], a=c, b=d);
 }
