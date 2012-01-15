@@ -1,10 +1,10 @@
-// This file is part of the materials accompanying the book 
-// "The Elements of Computing Systems" by Nisan and Schocken, 
+// This file is part of the materials accompanying the book
+// "The Elements of Computing Systems" by Nisan and Schocken,
 // MIT Press. Book site: www.idc.ac.il/tecs
 // File name: projects/01/Mux8Way16.hdl
 
 /**
- * 8-way 16-bit multiplexor.  
+ * 8-way 16-bit multiplexor.
  * out = a if sel==000
  *       b if sel==001
  *       etc.
@@ -20,4 +20,10 @@ CHIP Mux8Way16 {
 
     PARTS:
     // Put your code here.
+    // First 2 selection bits
+    Mux4Way16(a=a, b=b, c=c, d=d, sel=sel[0..1], out=mux0);
+    Mux4Way16(a=e, b=f, c=g, d=h, sel=sel[0..1], out=mux1);
+
+    // 3rd selection bit
+    Mux16(a=mux0, b=mux1, sel=sel[2], out=out);
 }
