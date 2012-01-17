@@ -1,0 +1,17 @@
+// This file is part of the materials accompanying the book 
+// "The Elements of Computing Systems" by Nisan and Schocken, 
+// MIT Press. Book site: www.idc.ac.il/tecs
+// File name: projects/02/Adder16.hdl
+
+/*
+ * Adds two 16-bit values.
+ * The most-significant carry bit is ignored.
+ */
+
+CHIP Add16 {
+    IN a[16], b[16];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here.
+}
