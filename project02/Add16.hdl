@@ -13,7 +13,6 @@ CHIP Add16 {
     OUT out[16];
 
     PARTS:
-    // Put your code here.
     // First bit can be a half adder because there is no carry to worry about carrying over
     HalfAdder(a=a[0], b=b[0], sum=out[0], carry=carry1);
     FullAdder(a=a[1], b=b[1], c=carry1, sum=out[1], carry=carry2);

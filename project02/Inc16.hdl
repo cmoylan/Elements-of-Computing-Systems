@@ -1,5 +1,5 @@
-// This file is part of the materials accompanying the book 
-// "The Elements of Computing Systems" by Nisan and Schocken, 
+// This file is part of the materials accompanying the book
+// "The Elements of Computing Systems" by Nisan and Schocken,
 // MIT Press. Book site: www.idc.ac.il/tecs
 // File name: projects/02/Inc16.hdl
 
@@ -12,5 +12,6 @@ CHIP Inc16 {
     OUT out[16];
 
     PARTS:
-    // Put your code here.
+    // Pass in a and 0000000000000001, represented as 15 falses and 1 true
+    Add16(a=in, b[0]=true, b[1..15]=false, out=out);
 }
