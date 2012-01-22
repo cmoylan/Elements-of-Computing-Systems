@@ -1,22 +1,22 @@
-// This file is part of the materials accompanying the book 
-// "The Elements of Computing Systems" by Nisan and Schocken, 
+// This file is part of the materials accompanying the book
+// "The Elements of Computing Systems" by Nisan and Schocken,
 // MIT Press. Book site: www.idc.ac.il/tecs
 // File name: projects/02/ALU.hdl
 
 /**
  * The ALU. Computes one of the following functions:
- * x+y, x-y, y–x, 0, 1, -1, x, y, -x, -y, !x, !y,
- * x+1, y+1, x-1, y-1, x&y, x|y on two 16-bit inputs, 
+ * x+y, x-y, y&x, 0, 1, -1, x, y, -x, -y, !x, !y,
+ * x+1, y+1, x-1, y-1, x&y, x|y on two 16-bit inputs,
  * according to 6 input bits denoted zx,nx,zy,ny,f,no.
- * The bit-combinations that yield each function are 
- * documented in the book. In addition, the ALU 
+ * The bit-combinations that yield each function are
+ * documented in the book. In addition, the ALU
  * computes two 1-bit outputs: if the ALU output
  * is 0, zr is set to 1; otherwise zr is set to 0;
  * If out<0, ng is set to 1; otherwise ng is set to 0.
  */
 
 // Implementation: the ALU manipulates the x and y
-// inputs and then operates on the resulting values, 
+// inputs and then operates on the resulting values,
 // as follows:
 // if (zx==1) set x = 0        // 16-bit constant
 // if (nx==1) set x = ~x       // bitwise "not"
@@ -28,10 +28,10 @@
 // if (out==0) set zr = 1
 // if (out<0) set ng = 1
 
-  
+
 CHIP ALU {
-    IN  
-        x[16], y[16],  // 16-bit inputs        
+    IN
+        x[16], y[16],  // 16-bit inputs
         zx, // zero the x input?
         nx, // negate the x input?
         zy, // zero the y input?
@@ -39,11 +39,47 @@ CHIP ALU {
         f,  // compute  out = x + y (if 1) or out = x & y (if 0)
         no; // negate the out output?
 
-    OUT 
+    OUT
         out[16], // 16-bit output
         zr, // 1 if (out==0), 0 otherwise
         ng; // 1 if (out<0),  0 otherwise
 
     PARTS:
-    // Put your code here.
+    // ----- Zero x (zx bit)
+    // If the zx bit is set, the muxer will select 16 bits of 0,
+    // otherwise it will select x
+    Mux16(a=x, b=false, sel=zx, out=zxOut);
+
+    // ----- Negate x (nx bit)
+    // Negate x with Not16. Then use Mux16 to select between negated x
+    // or the previous output (zxOut).
+    Not16(in=zxOut, out=notX);
+    Mux16(a=zxOut, b=notX, sel=nx, out=nxOut);
+
+    // ----- Zero y (zy bit)
+    // Exactly the same as zero x.
+    Mux16(a=y, b=false, sel=zy, out=zyOut);
+
+    // ----- Negate y (zy bit)
+    // Behaves exactly the same as Negate x.
+    Not16(in=zyOut, out=notY);
+    Mux16(a=zyOut, b=notY, sel=ny, out=nyOut);
+
+    // ----- Compute out (f bit)
+    // x & y
+    And16(a=nxOut, b=nyOut, out=andOut);
+
+    // x + y
+    Add16(a=nxOut, b=nyOut, out=addOut);
+
+    // Return the output that the f bit expects
+    Mux16(a=andOut, b=addOut, sel=f, out=fOut);
+
+    // ----- Negate output (no bit)
+    // Simply negate the output if this bit is set. This operation returns
+    // the final output.
+    Not16(in=fOut, out=noOut);
+    Mux16(a=fOut, b=noOut, sel=no, out=out);
+
 }
+
