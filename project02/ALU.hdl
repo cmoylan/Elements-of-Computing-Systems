@@ -79,7 +79,22 @@ CHIP ALU {
     // Simply negate the output if this bit is set. This operation returns
     // the final output.
     Not16(in=fOut, out=noOut);
-    Mux16(a=fOut, b=noOut, sel=no, out=out);
+    Mux16(a=fOut, b=noOut, sel=no, out=final);
+
+    // Need out final mux so that we can save the final output and run a few
+    // tests on it below.
+    Mux16(a=final, b=false, sel=false, out=out);
+
+    // ----- Return true if the output is zero (zr)
+    // Or over all 16 bits. This will return false if the number is zero,
+    // so flip the bit so that zr is true
+    Or16Way(in=final, out=zrOut);
+    Not(in=zrOut, out=zr);
+
+    // ----- Return true if the output is negative (ng)
+    // The most significant bit will be 1 if the number is negative thanks to
+    // 2's complement. But I abstracted all of that out into another chip.
+    IsNeg(in=final, out=ng);
 
 }
 

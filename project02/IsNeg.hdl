@@ -1,0 +1,16 @@
+// Another gate that wasn't in the book but came in handy
+//
+
+/**
+* Return 1 if the highest bit is 1, indicating a negative
+* number in 2's complement
+ */
+
+CHIP IsNeg {
+
+    IN in[16];
+    OUT out;
+
+    PARTS:
+    Or(a=in[15], b=false, out=out);
+}
