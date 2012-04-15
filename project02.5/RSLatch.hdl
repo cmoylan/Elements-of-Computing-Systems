@@ -1,0 +1,9 @@
+CHIP RSLatch {
+  IN s-, r-;
+  OUT q, q-;
+
+  PARTS:
+  SNand(a=s-, b=qq-, out=qq, out=q);
+  SNand(a=r-, b=qq, out=qq-, out=q-);
+
+}

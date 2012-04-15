@@ -1,0 +1,21 @@
+CHIP RSFF {
+
+  // The conventional abbreviation for the clock input is 'clk'
+  // but there is a bug in the Hardware Simulator that confuses
+  // that signal name with the internal DFF clock.
+
+    IN  s, r, ck;
+    OUT q, q-;
+
+    PARTS:
+    SNand(a=s, b=ck, out=s1-);
+    SNand(a=r, b=ck, out=r1-);
+    SNand(a=s1-, b=q1-, out=q1);
+    SNand(a=r1-, b=q1, out=q1-);
+    SNot(in=ck, out=ck-);
+    SNand(a=q1, b=ck-, out=s2-);
+    SNand(a=q1-, b=ck-, out=r2-);
+    SNand(a=s2-, b=q2-, out=q2, out=q);
+    SNand(a=r2-, b=q2, out=q2-, out=q-);
+}
+

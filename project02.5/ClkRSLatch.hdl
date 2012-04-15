@@ -1,0 +1,16 @@
+CHIP ClkRSLatch {
+
+  // The conventional abbreviation for the clock input is 'clk'
+  // but there is a bug in the Hardware Simulator that confuses
+  // that signal name with the internal DFF clock.
+
+  IN  s, r, ck;
+  OUT q, q-;
+
+  PARTS:
+  SNand(a=s, b=ck, out=s-);
+  SNand(a=r, b=ck, out=r-);
+  SNand(a=s-, b=qq-, out=q, out=qq);
+  SNand(a=r-, b=qq, out=q-, out=qq-);
+}
+

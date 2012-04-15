@@ -1,0 +1,11 @@
+/// SNot -- Synchronized Not gate
+
+CHIP SNot {
+
+    IN  in;
+    OUT out;
+
+    PARTS:
+    Not(in=in, out=x);
+    DFF(in=x, out=out);
+}
