@@ -29,6 +29,9 @@ CHIP PC {
     // If reset bit is set, store 0
     Mux16(a=loadOut, b=false, sel=reset, out=regIn);
 
+    // NOTE: probably can do it like this, but i'm tired
+    // Mux4Way16(a=regOut, b=addOut, c=in, d=false, sel=something, out=regIn);
+
     // Storage element for the counter
     Register(in=regIn, load=true, out=regOut, out=out);
 
