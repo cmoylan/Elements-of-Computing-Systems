@@ -20,23 +20,29 @@ CHIP PC {
 
     // Pin priority: reset, load, inc
 
-    // If inc bit is set, set value from last cycles Add16
+    // If inc bit is set, take the value from last cycle's Add16,
+    // otherwise just take the Register's output from last cycle.
     Mux16(a=regOut, b=addOut, sel=inc, out=incrementOut);
 
-    // If load bit is set, take the input, otherwise take 0
+    // If load bit is set, take the input, otherwise take the value
+    // from the inc mux.
     Mux16(a=incrementOut, b=in, sel=load, out=loadOut);
 
-    // If reset bit is set, store 0
+    // If reset bit is set take 0, otherwise take the value
+    // from the load mux.
     Mux16(a=loadOut, b=false, sel=reset, out=regIn);
 
     // NOTE: probably can do it like this, but i'm tired
     // Mux4Way16(a=regOut, b=addOut, c=in, d=false, sel=something, out=regIn);
 
     // Storage element for the counter
+    // Note that load bit is always set because we want to update the
+    // stored value every clock cycle. Also note that the out bus is sent
+    // to out, and fed back into the chip for the next cycle.
     Register(in=regIn, load=true, out=regOut, out=out);
 
-    // If inc is set, add 1 to regOut and feed it back
-    // in to Register
+    // Add 1 to the output of the Register and feed the result back
+    // for the next clock cycle.
     Add16(a=regOut, b[0]=true, out=addOut);
 
 }
