@@ -1,5 +1,5 @@
-// This file is part of the materials accompanying the book 
-// "The Elements of Computing Systems" by Nisan and Schocken, 
+// This file is part of the materials accompanying the book
+// "The Elements of Computing Systems" by Nisan and Schocken,
 // MIT Press. Book site: www.idc.ac.il/tecs
 // File name: projects/03/a/PC.hdl
 
@@ -17,5 +17,24 @@ CHIP PC {
 
     PARTS:
     // Put your code here.
+
+    // Pin priority: reset, load, inc
+
+    // If inc bit is set, set value from last cycles Add16
+    Mux16(a=regOut, b=addOut, sel=inc, out=incrementOut);
+
+    // If load bit is set, take the input, otherwise take 0
+    Mux16(a=incrementOut, b=in, sel=load, out=loadOut);
+
+    // If reset bit is set, store 0
+    Mux16(a=loadOut, b=false, sel=reset, out=regIn);
+
+    // Storage element for the counter
+    Register(in=regIn, load=true, out=regOut, out=out);
+
+    // If inc is set, add 1 to regOut and feed it back
+    // in to Register
+    Add16(a=regOut, b[0]=true, out=addOut);
+
 }
 
