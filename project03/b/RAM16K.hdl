@@ -16,4 +16,16 @@ CHIP RAM16K {
 
     PARTS:
     // Put your code here.
+
+    // Address is 14 bits: xxyyyyyyyyyyyy
+    // First 2 bits select between 4 RAM4Ks
+    // Next 12 are passed to that RAM4K and recurse
+    DMux4Way(in=load, sel=address[0..1], a=loadA, b=loadB, c=loadC, d=loadD);
+
+    RAM4K(in=in, load=loadA, address=address[2..13], out=outA);
+    RAM4K(in=in, load=loadB, address=address[2..13], out=outB);
+    RAM4K(in=in, load=loadC, address=address[2..13], out=outC);
+    RAM4K(in=in, load=loadD, address=address[2..13], out=outD);
+
+    Mux4Way16(a=outA, b=outB, c=outC, d=outD, sel=address[0..1], out=out);
 }
