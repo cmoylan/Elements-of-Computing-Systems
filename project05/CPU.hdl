@@ -38,6 +38,40 @@ CHIP CPU {
         addressM[15],    // Address in data memory (of M)
         pc[15];          // address of next instruction
 
-     PARTS:
-    // Put your code here.
+   PARTS:
+    // Put your code here:
+	Mux16(a=instruction,b=outALU,sel=instruction[15],out=outMux1);
+	
+	//Register A
+	Not(in=instruction[15],out=notAnd);
+	Or(a=notAnd,b=instruction[5],out=outOr);
+	ARegister(in=outMux1,load=outOr,out=outA,out[0..14]=addressM);
+	
+	//D
+	And(a=instruction[15],b=instruction[4],out=loadD);
+	DRegister(in=outALU,load=loadD,out=outD);
+	
+	//Mux A&M
+	Mux16(a=outA,b=inM,sel=instruction[12],out=outAM);
+	
+	//ALU
+	ALU(x=outD,y=outAM,zx=instruction[11],nx=instruction[10],zy=instruction[9], 
+	ny=instruction[8], f=instruction[7], no=instruction[6],
+	out=outALU,out=outM,zr=zr,ng=ng);
+	
+	//Mux writeM
+	And(a=instruction[3],b=instruction[15],out=writeM);
+	
+	//PC
+	Not(in=zr,out=notzr);
+	Not(in=ng,out=notng);
+	And(a=notzr,b=notng,out=ps);
+	And(a=ng,b=instruction[2],out=and1);
+	And(a=zr,b=instruction[1],out=and2);
+	And(a=ps,b=instruction[0],out=and3);
+	Or(a=and1,b=and2,out=or1);
+	Or(a=or1,b=and3,out=or2);
+	And(a=or2,b=instruction[15],out=outAnd3); 
+	PC(in=outAM,load=outAnd3,reset=reset,inc=true,out[0..14]=pc);
+	
 }
