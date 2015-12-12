@@ -26,4 +26,13 @@ CHIP Mux8Way16 {
 
     // 3rd selection bit
     Mux16(a=mux0, b=mux1, sel=sel[2], out=out);
+    
+    //If you don't konw the use of sel[0..1],here is another method
+    //Mux16(a=a,b=b,sel=sel[0],out=mux1);
+    //Mux16(a=c,b=d,sel=sel[0],out=mux2);
+    //Mux16(a=e,b=f,sel=sel[0],out=mux3);
+    //Mux16(a=g,b=h,sel=sel[0],out=mux4);
+    //Mux16(a=mux1,b=mux2,sel=sel[1],out=mux5);
+    //Mux16(a=mux3,b=mux4,sel=sel[1],out=mux6);
+    //Mux16(a=mux5,b=mux6,sel=sel[2],out=out);
 }
