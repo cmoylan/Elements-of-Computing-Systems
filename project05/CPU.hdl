@@ -39,5 +39,34 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
      PARTS:
-    // Put your code here.
+    // C-instruction
+    // comp
+    Mux16(a=regA, b=inM, sel=instruction[12], out=aluY);
+    ALU(x=regD, y=aluY, 
+        zx=instruction[11], nx=instruction[10], 
+        zy=instruction[9], ny=instruction[8],
+        f=instruction[7], no=instruction[6],
+        out=outALU, out=outM, zr=zr, ng=ng);
+    // dest
+    And(a=instruction[5], b=instruction[15], out=destA);    // d1
+    And(a=instruction[4], b=instruction[15], out=destD);    // d2            
+    And(a=instruction[3], b=instruction[15], out=destM, out=writeM);    // d3
+    DRegister(in=outALU, load=destD, out=regD);                         // D-register
+    // jump
+    And(a=instruction[2], b=instruction[15], out=j1);
+    And(a=instruction[1], b=instruction[15], out=j2);
+    And(a=instruction[0], b=instruction[15], out=j3);
+    And(a=j1, b=ng, out=jump1);         // out < 0
+    And(a=j2, b=zr, out=jump2);         // out = 0
+    Or(a=zr, b=ng, out=zng);
+    Not(in=zng, out=notZNG);   
+    And(a=j3, b=notZNG, out=jump3);     // out > 0
+    Or8Way(in[0]=jump1, in[1]=jump2, in[2]=jump3, out=jump);
+    PC(in=regA, load=jump, inc=true, reset=reset, out[0..14]=pc);
+
+    // A-instruction
+    Mux16(a=instruction, b=outALU, sel=instruction[15], out=outA);
+    Not(in=instruction[15], out=instructA);
+    Or(a=instructA, b=destA, out=loadA);
+    ARegister(in=outA, load=loadA, out=regA, out[0..14]=addressM);      // A-register
 }
